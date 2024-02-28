@@ -1,2 +1,2 @@
 # Social-Briks
-decentralized storage solution for social media applications
+Decentralized storage solution for social media applications
