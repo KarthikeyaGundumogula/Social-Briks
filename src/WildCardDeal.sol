@@ -142,7 +142,7 @@ contract DealClient {
             pieceStatus[deal.piece_cid] == Status.DealPublished ||
             pieceStatus[deal.piece_cid] == Status.DealActivated
         ) {
-            revert("deal with this pieceCid already published");
+            revert("deal with this pieceCid already published or activated");
         }
 
         uint256 index = dealRequests.length;
@@ -358,8 +358,8 @@ contract DealClient {
             msg.sender == DATACAP_ACTOR_ETH_ADDRESS,
             "msg.sender needs to be datacap actor f07"
         );
-        emit ReceivedDataCap("DataCap Received!");
         // Add get datacap balance api and store datacap amount
+        emit ReceivedDataCap("DataCap Received!");
     }
 
     // handle_filecoin_method is the universal entry point for any evm based
