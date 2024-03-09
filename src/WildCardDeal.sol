@@ -353,7 +353,7 @@ contract DealClient {
         return withdrawBalanceAmount;
     }
 
-    function receiveDataCap(bytes memory params) internal {
+    function receiveDataCap(bytes memory /* params */) internal {
         require(
             msg.sender == DATACAP_ACTOR_ETH_ADDRESS,
             "msg.sender needs to be datacap actor f07"
