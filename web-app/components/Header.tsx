@@ -29,31 +29,31 @@ const Header = () => {
           <Flex alignItems="center">
             <Spacer />
             <HStack spacing={12}>
-              <Link href="/option1">
+              <Link href="/dashboard/fuckyoucanada">
                 <Text fontSize={"l"} fontWeight={"bold"}>
-                  Option 1
+                  Dashboard
                 </Text>
               </Link>
-              <Link href="/option2">
+              <Link href="/storage-providers">
                 <Text fontSize={"l"} fontWeight={"bold"}>
-                  Option 2
+                  Storage Providers
                 </Text>
               </Link>
-              <Link href="/option3">
+              <Link href="/about">
                 <Text fontSize={"l"} fontWeight={"bold"}>
-                  Option 3
+                  About
                 </Text>
               </Link>
               <Link href="/profile">
                 <Box>
-                  <Circle size="40px" bg="blue.500" />
+                  <Circle size="40px" bg="green.500" />
                 </Box>
               </Link>
             </HStack>
           </Flex>
         </Box>
       </Flex>
-      <Box borderBottom="1px solid black" width="100%" />
+      <Box borderBottom="1px solid #070F2B " width="100%" />
     </header>
   );
 };
