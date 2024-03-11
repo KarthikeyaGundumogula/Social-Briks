@@ -32,8 +32,7 @@ struct ProviderSet {
 
 struct Deal {
     bytes piece_cid;
-    address client;
-    address provider;
+    bytes provider;
     uint64 piece_size;
     bool verified_deal;
     string label;
@@ -87,7 +86,7 @@ contract One2OneDeal {
         bytes32 dealId,
         uint64 pieceSize,
         bool verifiedDeal,
-        address provider,
+        bytes provider,
         uint256 storagePricePerEpoch
     );
 
@@ -103,15 +102,12 @@ contract One2OneDeal {
         bytes32 requestId
     ) internal view returns (Deal memory) {
         RequestIdx memory ri = dealRequestIdx[requestId];
-        address provider = deals[ri.idx].provider;
-        require(provider == msg.sender, "only provider can access deal");
         require(ri.valid, "proposalId not available");
         return deals[ri.idx];
     }
 
     function makeDeal(Deal calldata deal) public returns (bytes32) {
         require(msg.sender == owner, "only owner can make deal");
-        require(deal.client == msg.sender, "client must be the sender");
 
         if (
             pieceStatus[deal.piece_cid] == Status.DealPublished ||
