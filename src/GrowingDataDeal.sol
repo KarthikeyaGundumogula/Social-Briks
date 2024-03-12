@@ -5,7 +5,6 @@ import {MarketAPI} from "filecoin-solidity/v0.8/MarketAPI.sol";
 import {CommonTypes} from "filecoin-solidity/v0.8/types/CommonTypes.sol";
 import {MarketTypes} from "filecoin-solidity/v0.8/types/MarketTypes.sol";
 import {AccountTypes} from "filecoin-solidity/v0.8/types/AccountTypes.sol";
-import {AccountCBOR} from "filecoin-solidity/v0.8/cbor/AccountCbor.sol";
 import {MarketCBOR} from "filecoin-solidity/v0.8/cbor/MarketCbor.sol";
 import {BytesCBOR} from "filecoin-solidity/v0.8/cbor/BytesCbor.sol";
 import {BigNumbers, BigNumber} from "solidity-BigNumber/BigNumbers.sol";
@@ -39,6 +38,7 @@ struct Aggrement {
     uint64 min_piece_size;
     bool verified_deal;
     int64 start_epoch;
+    uint64 currently_stored_data_size;
     uint256 storage_price_per_epoch;
     int64 end_epoch;
 }
@@ -46,6 +46,7 @@ struct Aggrement {
 struct DealRequest {
     bytes piece_cid;
     uint64 piece_size;
+    bytes provider;
     bool verified_deal;
     string label;
     int64 start_epoch;
@@ -77,7 +78,6 @@ function serializeExtraParamsV1(
 }
 
 contract DataLimitContract {
-    using AccountCBOR for *;
     using MarketCBOR for *;
 
     uint64 public constant AUTHENTICATE_MESSAGE_METHOD_NUM = 2643134072;
@@ -97,18 +97,31 @@ contract DataLimitContract {
         AggrementCompleted
     }
 
-    mapping(bytes32 => AggrementRequestID) initialDealRequests;
+    enum DataAddonStatus {
+        None,
+        RequestSubmitted,
+        DataRecieved
+    }
+
+    mapping(bytes32 => AggrementRequestID) aggrementRequests;
     mapping(bytes32 => DealRequestID) dealRequests;
     mapping(bytes32 => AggrementStatus) aggrementStatus;
-    mapping(bytes32 => Provider) public aggrementProviders;
+    mapping(bytes32 => Provider) aggrementProviders;
+    mapping(bytes32 => DataAddonStatus)  dataAddonStatus;
 
     Aggrement[] public aggrements;
+    DealRequest[] public deals;
 
     event AggrementRequestCreated(
         bytes32 indexed id,
         bytes provider,
         uint64 threshold_peice_size,
         bool verified_deal
+    );
+
+    event DataAddOnRequested(
+        bytes32 indexed id,
+        bytes provider
     );
 
     constructor() {
@@ -120,12 +133,22 @@ contract DataLimitContract {
         _;
     }
 
+    function getAggrement(bytes32 id) public view returns (Aggrement memory) {
+        uint index = aggrementRequests[id].index;
+        return aggrements[index];
+    }
+
+    function getDeal(bytes32 id) public view returns (DealRequest memory) {
+        uint index = dealRequests[id].dealIndex;
+        return deals[index];
+    }
+
     function makeAggrementRequest(Aggrement calldata aggrementParams) public {
         uint index = aggrements.length;
         bytes32 id = keccak256(
             abi.encodePacked(msg.sender, block.timestamp, index)
         );
-        initialDealRequests[id] = AggrementRequestID(id, index, true);
+        aggrementRequests[id] = AggrementRequestID(id, index, true);
         aggrements.push(aggrementParams);
         aggrementStatus[id] = AggrementStatus.RequestSubmitted;
         aggrementProviders[id] = Provider(aggrementParams.provider, true);
@@ -145,5 +168,30 @@ contract DataLimitContract {
         aggrementStatus[id] = AggrementStatus.DealAccepted;
     }
 
-    function sendDataDeal() public {}
+    function sendDataDeal(
+        DealRequest calldata deal,
+        bytes32 aggrementID
+    ) public {
+        Aggrement memory agg = getAggrement(aggrementID);
+        uint64 current_data_size = agg.currently_stored_data_size;
+        uint64 threshold_size = agg.threshold_peice_size;
+        
+        if( deal.piece_size > threshold_size-current_data_size){
+            revert("peice size is greater than the agrred threshold size");
+        }
+        uint index = deals.length;
+        bytes32 id = keccak256(
+            abi.encodePacked(msg.sender, block.timestamp, index)
+        );
+        dealRequests[id] = DealRequestID(id, index, true);
+        deals.push(deal);
+        dataAddonStatus[id] = DataAddonStatus.DataRecieved;
+
+        emit DataAddOnRequested(
+            id,
+            deal.provider
+        );
+    }
+
+
 }
