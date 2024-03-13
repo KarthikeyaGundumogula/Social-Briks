@@ -69,7 +69,7 @@ function serializeExtraParamsV1(
     return buf.data();
 }
 
-contract DealClient {
+contract WildCardDeal {
     using AccountCBOR for *;
     using MarketCBOR for *;
 
