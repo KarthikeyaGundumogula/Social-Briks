@@ -5,11 +5,10 @@ import {
   Tbody,
   Tr,
   Th,
-  Td,
   TableContainer,
 } from "@chakra-ui/react";
 import Header from "@/components/Header";
-import ProviderRow from "@/components/Dashboard/ProviderRow";
+import ProviderRow from "@/components/Storage-Providers/ProviderRow";
 
 const TableComponent = () => {
   return (
