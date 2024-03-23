@@ -8,7 +8,9 @@ const Dashboard: React.FC = () => {
     <div>
       <Header />
       <Box padding={2} paddingLeft={8}>
-        <Heading size="lg">Dashboard</Heading>
+        <Heading size="lg" textDecoration="underline">
+          Applications
+        </Heading>
       </Box>
       <Box alignItems="center" padding={2} paddingLeft={8}>
         <Grid templateColumns="repeat(3, 2fr)" gap={4}>
@@ -20,7 +22,7 @@ const Dashboard: React.FC = () => {
           <AppCard
             title="Social Briks"
             options={["red", "blue", "white", "fuck"]}
-            status="active"
+            status="dead"
           />
           <AppCard
             title="Social Briks"

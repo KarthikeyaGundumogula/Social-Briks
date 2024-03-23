@@ -9,6 +9,7 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 
 interface AppCardProps {
   title: string;
@@ -26,11 +27,17 @@ const AppCard: React.FC<AppCardProps> = ({ title, options, status }) => {
         borderWidth="1px"
         borderRadius="12"
         p={2}
-        boxShadow="xl"
         width="400px"
-        height="100px"
+        height="150px"
         bg={"AppWorkspace"}
+        _hover={{
+          cursor: "pointer",
+          boxShadow: "2xl",
+          width: "420px",
+          height: "160px",
+        }}
       >
+        {" "}
         <Badge
           position="relative"
           top={1}
@@ -41,9 +48,7 @@ const AppCard: React.FC<AppCardProps> = ({ title, options, status }) => {
           borderRadius={100}
           textAlign={"center"}
           colorScheme={status === "active" ? "green" : "red"}
-        >
-          {" "}
-        </Badge>
+        />
         <Grid
           height={100}
           templateRows="repeat(2, 1fr)"

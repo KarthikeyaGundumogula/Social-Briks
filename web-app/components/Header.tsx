@@ -4,7 +4,7 @@ import {
   Flex,
   Spacer,
   Image,
-  Text,
+  Heading,
   Circle,
   Link,
   HStack,
@@ -19,9 +19,9 @@ const Header = () => {
           <Image src={logo.src} alt="Logo" width={16} height={16} />{" "}
         </Box>
         <Box>
-          <Text fontSize="36" fontWeight="bold">
+          <Heading fontSize="36" fontWeight="bold">
             Social Briks
-          </Text>
+          </Heading>
         </Box>
         <Spacer />
         <Spacer />
@@ -30,19 +30,19 @@ const Header = () => {
             <Spacer />
             <HStack spacing={12}>
               <Link href="/dashboard/fuckyoucanada">
-                <Text fontSize={"l"} fontWeight={"bold"}>
+                <Heading fontSize={"l"} fontWeight={"bold"}>
                   Dashboard
-                </Text>
+                </Heading>
               </Link>
               <Link href="/storage-providers">
-                <Text fontSize={"l"} fontWeight={"bold"}>
+                <Heading fontSize={"l"} fontWeight={"bold"}>
                   Storage Providers
-                </Text>
+                </Heading>
               </Link>
               <Link href="/about">
-                <Text fontSize={"l"} fontWeight={"bold"}>
+                <Heading fontSize={"l"} fontWeight={"bold"}>
                   About
-                </Text>
+                </Heading>
               </Link>
               <Link href="/profile">
                 <Box>
